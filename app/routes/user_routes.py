@@ -1,13 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,Depends
 from app.controllers import user_controller
 from app.models.user_model import UserModel
-
+from app.middleware import auth_middleware
 router = APIRouter(
     prefix="/users",
     tags=["users"]
 )
 
-@router.get("/")
+
+@router.get("/", dependencies=[Depends(auth_middleware.my_middleware(["Admin","User"]))])
 def get_all_users():
     return user_controller.get_all_users_controller()
 
@@ -15,7 +16,7 @@ def get_all_users():
 def get_user_by_id(user_id: int):
     return user_controller.get_user_by_id_controller(user_id)
 
-@router.post("/")
+@router.post("/", dependencies=[Depends(auth_middleware.my_middleware(["Admin"]))])
 def create_user(user_data: UserModel):
     return user_controller.create_user_controller(user_data)
 
