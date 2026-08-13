@@ -1,23 +1,16 @@
 from fastapi import FastAPI
-from app.routes.user_routes import router as user_routes
-from app.routes.product_routes import router as product_routes
+from app.database.connection import engine, Base
+from app.models.user_model import User
+from app.routes.user_routes import router as user_router
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="User Management API",
-    description="FastAPI project using dummy data",
+    description="A simple API for managing users",
     version="1.0.0"
 )
-
-# @app.middleware("http")
-# async def log_requests(request, call_next):
-#     print(f"Incoming request: {request.method} {request.url}")
-#     response = await call_next(request)
-#     print(f"Response: {response.status_code}")
-#     return response
-
-app.include_router(user_routes)
-app.include_router(product_routes)
-
+app.include_router(user_router)
 
 # -------------------------
 # Home Route

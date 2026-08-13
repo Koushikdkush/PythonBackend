@@ -1,43 +1,47 @@
-from app.data.users import users
-from fastapi import HTTPException
+from sqlalchemy.orm import Session
+from app.models.user_model import User
+from app.schemas.user_schema import UserCreate
+import uuid
 
-# get all users
-def get_all_users():
-    return users
+def get_users(db: Session):
+    return db.query(User).all()
 
-# get user by id
-def get_user_by_id(user_id: int):
-    for user in users:
-        if user["id"] == user_id:
-            return user
-    return None
 
-# create a new user
-def create_user(user_data: dict):
-    for user in users:
-        if user["email"] == user_data["email"]:
-            raise HTTPException(status_code=400, detail="Email already exists")
-    
-    new_id = max(user["id"] for user in users) + 1 if users else 1
-    user_data["id"] = new_id
-    users.append(user_data)
-    return user_data
+def get_user_by_id(db: Session, user_id: uuid.UUID):
+    return db.query(User).filter(User.id == user_id).first()
 
-# update an existing user
-def update_user(user_id: int, user_data: dict):
-    if "email" in user_data and user_data["email"] is not None:
-        raise HTTPException(status_code=400, detail="Email cannot be updated")
 
-    for user in users:
-        if user["id"] == user_id:
-            user.update(user_data)
-            return user
-    return None
+def create_user(db: Session, user: UserCreate):
 
-# delete a user
-def delete_user(user_id: int):
-    for user in users:
-        if user["id"] == user_id:
-            users.remove(user)
-            return True
-    return False
+    existing_user = (
+        db.query(User)
+        .filter(User.email == user.email)
+        .first()
+    )
+
+    if existing_user:
+        return None
+
+    new_user = User(
+        name=user.name,
+        email=user.email
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
+
+
+def delete_user(db: Session, user_id: uuid.UUID):
+
+    user = get_user_by_id(db, user_id)
+
+    if not user:
+        return None
+
+    db.delete(user)
+    db.commit()
+
+    return user
