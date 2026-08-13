@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.user_model import User
-from app.schemas.user_schema import UserCreate
+from app.schemas.user_schema import UserCreate,UserUpdate
 import uuid
 
 def get_users(db: Session):
@@ -9,6 +9,26 @@ def get_users(db: Session):
 
 def get_user_by_id(db: Session, user_id: uuid.UUID):
     return db.query(User).filter(User.id == user_id).first()
+
+def update_user_details(
+    db: Session,
+    user_id: uuid.UUID,
+    payload: UserUpdate
+):
+    user = get_user_by_id(db, user_id)
+
+    if user is None:
+        return None
+
+    update_data = payload.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(user, key, value)
+
+    db.commit()
+    db.refresh(user)
+
+    return user
 
 
 def create_user(db: Session, user: UserCreate):

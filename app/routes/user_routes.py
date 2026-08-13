@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
-from app.schemas.user_schema import UserCreate, UserResponse
+from app.schemas.user_schema import UserCreate, UserResponse,UserUpdate
 from app.controllers import user_controller
 import uuid
 
@@ -32,6 +32,11 @@ def create_user(
     db: Session = Depends(get_db)
 ):
     return user_controller.create_user(db, user)
+
+@router.patch("/update/{user_id}", response_model=UserResponse)
+def update_user(user_id: uuid.UUID,payload:UserUpdate,db: Session = Depends(get_db)):
+    return user_controller.update_user_details(db,user_id,payload)
+
 
 
 @router.delete("/{user_id}")

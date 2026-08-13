@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import uuid
-from app.schemas.user_schema import UserCreate
+from app.schemas.user_schema import UserCreate,UserUpdate
 from app.services import user_service
 
 
@@ -34,6 +34,18 @@ def create_user(db: Session, user: UserCreate):
         )
 
     return new_user
+
+def update_user_details(db:Session,user_id: uuid.UUID,payload:UserUpdate):
+
+    updatedUser = user_service.update_user_details(db,user_id,payload)
+
+    if updatedUser is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+    
+    return updatedUser
 
 
 def delete_user(db: Session, user_id: uuid.UUID):
