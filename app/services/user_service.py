@@ -24,7 +24,11 @@ def create_user(db: Session, user: UserCreate):
 
     new_user = User(
         name=user.name,
-        email=user.email
+        email=user.email,
+        age=user.age,
+        salary=user.salary,
+        address=user.address,
+        phoneNumber=user.phoneNumber
     )
 
     db.add(new_user)

@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import String,UUID
+from sqlalchemy import Integer, String, UUID, Float, Column
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.connection import Base
@@ -15,11 +15,13 @@ class User(Base):
     )
 
     name: Mapped[str] = mapped_column(String(100))
-
+    age: Mapped[int] = mapped_column(Integer)
+    salary: Mapped[float] = mapped_column(Float)
     email: Mapped[str] = mapped_column(
         String(150),
         unique=True,
         index=True
     )
+    address = Column(String(100), nullable=True)
+    phoneNumber = Column(String(10), nullable=True)
 
-    
