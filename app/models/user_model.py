@@ -1,7 +1,6 @@
 import uuid
 from sqlalchemy import Integer, String, UUID, Float, Column
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.connection import Base
 
 
@@ -24,4 +23,4 @@ class User(Base):
     )
     address = Column(String(100), nullable=True)
     phoneNumber = Column(String(10), nullable=True)
-
+    posts = relationship("Post", back_populates="user")

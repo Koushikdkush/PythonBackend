@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from typing import Optional
 import uuid
 
@@ -17,6 +17,13 @@ class UserUpdate(BaseModel):
     salary: float | None = None
     address: str | None = None
     phoneNumber: str | None = None
+
+
+class UserShape(BaseModel):
+    id: uuid.UUID
+    name:str
+    email:str
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserResponse(BaseModel):
