@@ -1,14 +1,13 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import uuid
-from app.schemas.user_schema import UserCreate,UserUpdate
+from app.schemas.user_schema import UserCreate, UserUpdate, PasswordUpdate
 from app.services import user_service
 
 
 def get_users(db: Session):
 
     return user_service.get_users(db)
-
 
 def get_user(db: Session, user_id: uuid.UUID):
 
@@ -21,7 +20,6 @@ def get_user(db: Session, user_id: uuid.UUID):
         )
 
     return user
-
 
 def create_user(db: Session, user: UserCreate):
 
@@ -47,7 +45,6 @@ def update_user_details(db:Session,user_id: uuid.UUID,payload:UserUpdate):
     
     return updatedUser
 
-
 def delete_user(db: Session, user_id: uuid.UUID):
 
     user = user_service.delete_user(db, user_id)
@@ -61,3 +58,6 @@ def delete_user(db: Session, user_id: uuid.UUID):
     return {
         "message": "User deleted successfully"
     }
+
+def updatePassword(db: Session, user_id: uuid.UUID, payload: PasswordUpdate):
+    return user_service.update_password(db, user_id, payload)

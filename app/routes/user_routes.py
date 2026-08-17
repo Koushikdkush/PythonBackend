@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
-from app.schemas.user_schema import UserCreate, UserResponse,UserUpdate
+from app.schemas.user_schema import UserCreate, UserResponse,UserUpdate,PasswordUpdate
 from app.controllers import user_controller
 import uuid
 
@@ -45,3 +45,11 @@ def delete_user(
     db: Session = Depends(get_db)
 ):
     return user_controller.delete_user(db, user_id)
+
+
+@router.patch("/updatePassword/{user_Id}")
+def update_password(
+        user_Id: uuid.UUID,
+        payload:PasswordUpdate,
+        db: Session = Depends(get_db)):
+    return  user_controller.updatePassword(db,user_Id,payload)

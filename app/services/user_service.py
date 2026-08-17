@@ -65,16 +65,21 @@ def create_user(db: Session, user: UserCreate):
     return new_user
 
 def update_password(db: Session, user_id: uuid.UUID, payload: PasswordUpdate):
-    user = get_user_by_id(db, user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
 
-    hashedPwd = passwordHash.hash_password(payload.password)
-    setattr(user, "password", hashedPwd)
+   try:
+       user = get_user_by_id(db, user_id)
+       if user is None:
+           raise HTTPException(status_code=404, detail="User not found")
 
-    db.commit()
-    db.refresh(user)
-    return user
+       hashedPwd = passwordHash.hash_password(payload.password)
+       setattr(user, "password", hashedPwd)
+
+       db.commit()
+       db.refresh(user)
+       return {"message": "Password updated"}
+
+   except Exception as e:
+       raise HTTPException(status_code=400, detail=str(e))
 
 
 def delete_user(db: Session, user_id: uuid.UUID):
