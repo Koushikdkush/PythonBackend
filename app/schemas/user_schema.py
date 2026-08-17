@@ -9,6 +9,7 @@ class UserCreate(BaseModel):
     salary: float
     address:str
     phoneNumber:str
+    password: str
 
 class UserUpdate(BaseModel):
     name: str | None = None
@@ -17,6 +18,9 @@ class UserUpdate(BaseModel):
     salary: float | None = None
     address: str | None = None
     phoneNumber: str | None = None
+
+class PasswordUpdate(BaseModel):
+    password: str
 
 
 class UserShape(BaseModel):
