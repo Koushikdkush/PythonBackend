@@ -6,7 +6,7 @@ from app.models.products_model import Products
 from app.routes.user_routes import router as user_router
 # from app.routes.product_routes import router as product_router
 from app.routes.post_routes import router as post_router
-
+from app.routes.login_routes import router as login_router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -17,6 +17,7 @@ app = FastAPI(
 app.include_router(user_router)
 # app.include_router(product_router)
 app.include_router(post_router)
+app.include_router(login_router)
 
 # -------------------------
 # Home Route
@@ -27,6 +28,7 @@ def home():
     return {
         "message": "Welcome to User Management API"
     }
+
 
 
 

@@ -1,11 +1,38 @@
-from fastapi import HTTPException
+from fastapi import Request, HTTPException
+from app.utils.tokenGenerator import decode_access_token
 
-def my_middleware(roles: list):
-    # Middleware logic here
-    current_user_role = "Admin"  # This is just a placeholder. In a real application, you would get this from the request or session.
-    def middleware_dependency():
-        if current_user_role in roles:
-            print(f"Middleware executed for roles: {roles}")
-        else:
-            raise HTTPException(status_code=403, detail="Access denied")
-    return middleware_dependency
+
+async def AuthMiddleware(request: Request):
+
+    try:
+        authorization = request.headers.get("Authorization")
+
+        if authorization is None:
+            raise HTTPException(
+                status_code=401,
+                detail="Authorization header missing"
+            )
+
+        token_type, token = authorization.split(" ", 1)
+
+        if token_type.lower() != "bearer":
+            raise ValueError("Invalid Authorization Header")
+
+    except ValueError:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid Authorization Header"
+        )
+
+    payload = decode_access_token(token)
+    print(payload)
+
+    if payload is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token"
+        )
+
+    request.state.user = payload
+
+    return payload

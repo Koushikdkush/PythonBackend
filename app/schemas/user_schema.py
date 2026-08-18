@@ -11,6 +11,11 @@ class UserCreate(BaseModel):
     phoneNumber:str
     password: str
 
+class LoginPayload(BaseModel):
+    email: EmailStr
+    password: str
+
+
 class UserUpdate(BaseModel):
     name: str | None = None
     email: str | None = None

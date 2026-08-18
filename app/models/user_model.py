@@ -22,7 +22,7 @@ class User(Base):
         unique=True,
         index=True
     )
-    password: str = Field(min_length=8, max_length=72)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
     address = Column(String(100), nullable=True)
     phoneNumber = Column(String(10), nullable=True)
     posts = relationship("Post", back_populates="user")
