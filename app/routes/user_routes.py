@@ -26,7 +26,7 @@ def get_user(
     return user_controller.get_user(db, user_id)
 
 
-@router.post("/", response_model=UserResponse)
+@router.post("/createUser", response_model=UserResponse)
 def create_user(
     user: UserCreate,
     db: Session = Depends(get_db)
