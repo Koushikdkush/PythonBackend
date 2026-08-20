@@ -57,3 +57,9 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UsersFilterPayload(BaseModel):
+    page: int = 1
+    limit: int = 10
+    isActive: bool = True

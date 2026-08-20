@@ -1,12 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import uuid
-from app.schemas.user_schema import UserCreate, UserUpdate, PasswordUpdate
+from app.schemas.user_schema import UserCreate, UserUpdate, PasswordUpdate, UsersFilterPayload
 from app.services import user_service
 
 
-def get_users(db: Session,isActive: bool = True,page: int = 1,limit: int = 2):
-    results, count = user_service.get_users(db, isActive,page,limit)
+def get_users(db:Session,payload:UsersFilterPayload):
+    results, count = user_service.get_users(db,payload)
     return results,count
 
 def get_user(db: Session, user_id: uuid.UUID):

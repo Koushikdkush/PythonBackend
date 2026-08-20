@@ -1,19 +1,19 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.user_model import User
-from app.schemas.user_schema import UserCreate,UserUpdate,PasswordUpdate
+from app.schemas.user_schema import UserCreate, UserUpdate, PasswordUpdate, UsersFilterPayload
 from app.utils import passwordHash
 import uuid
 from starlette import status
 
-def get_users(db: Session,isActive: bool = True,page: int = 1,limit: int = 2):
+def get_users(db: Session,payload:UsersFilterPayload):
 
     try:
-        start = (page - 1) * limit
+        start = (payload.page - 1) * payload.limit
         results = ((db.query(User)
-                   .filter(User.isActive == isActive)
+                   .filter(User.isActive == payload.isActive)
                    .offset(start)
-                   .limit(limit))
+                   .limit(payload.limit))
                    .all())
         count = len(results)
         return results,count

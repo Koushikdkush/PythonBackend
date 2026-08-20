@@ -1,26 +1,25 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database.connection import get_db
-from app.schemas.user_schema import UserCreate, UserResponse,UserUpdate,PasswordUpdate
+from app.schemas.user_schema import UserCreate, UserResponse,UserUpdate,PasswordUpdate,FilteredResponse,UsersFilterPayload
+
 from app.controllers import user_controller
 from app.middleware import auth_middleware
 import uuid
-
-from app.services import user_service
 
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
 )
 
-@router.get("/", dependencies=[Depends(auth_middleware.AuthMiddleware)])
+@router.get("/", dependencies=[Depends(auth_middleware.AuthMiddleware)],
+            response_model=FilteredResponse)
 def get_users(
-    isActive:bool = True,
-    page:int = 1,limit: int = 2,
+    payload:UsersFilterPayload = UsersFilterPayload(),
     db: Session = Depends(get_db),
 ):
-    results, count = user_service.get_users(db, isActive,page,limit)
-    return {"results":results, "count":count}
+    results, count = user_controller.get_users(db,payload)
+    return {"count":count,"results":results}
 
 
 @router.get("/{user_id}", response_model=UserResponse, dependencies=[Depends(auth_middleware.AuthMiddleware)])
