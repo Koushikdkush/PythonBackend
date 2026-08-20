@@ -1,6 +1,6 @@
+import datetime
 import uuid
-from pydantic import Field
-from sqlalchemy import Integer, String, UUID, Float, Column
+from sqlalchemy import Integer, String, UUID, Float, Column, Boolean, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.connection import Base
 
@@ -24,5 +24,10 @@ class User(Base):
     )
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     address = Column(String(100), nullable=True)
+    role: Mapped[str] = mapped_column(String(100), nullable=True, default='User')
+    date_of_birth: Mapped[datetime.date | None] = mapped_column(Date, nullable=True)
     phoneNumber = Column(String(10), nullable=True)
+    isActive: Mapped[bool] = mapped_column(Boolean,default=True, nullable=True)
+    idDeleted: Mapped[bool] = mapped_column(Boolean,default=False, nullable=True)
     posts = relationship("Post", back_populates="user")
+

@@ -5,9 +5,9 @@ from app.schemas.user_schema import UserCreate, UserUpdate, PasswordUpdate
 from app.services import user_service
 
 
-def get_users(db: Session):
-
-    return user_service.get_users(db)
+def get_users(db: Session,isActive: bool = True,page: int = 1,limit: int = 2):
+    results, count = user_service.get_users(db, isActive,page,limit)
+    return results,count
 
 def get_user(db: Session, user_id: uuid.UUID):
 
@@ -61,3 +61,4 @@ def delete_user(db: Session, user_id: uuid.UUID):
 
 def updatePassword(db: Session, user_id: uuid.UUID, payload: PasswordUpdate):
     return user_service.update_password(db, user_id, payload)
+

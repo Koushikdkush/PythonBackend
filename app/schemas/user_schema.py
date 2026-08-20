@@ -1,5 +1,5 @@
+from datetime import date
 from pydantic import BaseModel, ConfigDict, EmailStr
-from typing import Optional
 import uuid
 
 class UserCreate(BaseModel):
@@ -23,6 +23,10 @@ class UserUpdate(BaseModel):
     salary: float | None = None
     address: str | None = None
     phoneNumber: str | None = None
+    date_of_birth: date | None = None
+    idDeleted: bool | None = None
+    isActive: bool | None = None
+
 
 class PasswordUpdate(BaseModel):
     password: str
@@ -35,6 +39,10 @@ class UserShape(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class FilteredResponse(BaseModel):
+    results: list[UserUpdate]
+    count: int
+
 class UserResponse(BaseModel):
     id: uuid.UUID
     name: str
@@ -43,6 +51,9 @@ class UserResponse(BaseModel):
     email: EmailStr
     address: str | None = None
     phoneNumber: str | None = None
+    idDeleted: bool | None = None
+    isActive: bool | None = None
+    date_of_birth: date | None = None
 
     class Config:
         from_attributes = True

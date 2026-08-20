@@ -2,9 +2,10 @@ from fastapi import Request, HTTPException
 from app.utils.tokenGenerator import decode_access_token
 
 
-async def AuthMiddleware(request: Request):
+def AuthMiddleware(request: Request):
 
     try:
+        print("I am Executing Authorization Middleware")
         authorization = request.headers.get("Authorization")
 
         if authorization is None:
